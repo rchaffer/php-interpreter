@@ -7,7 +7,7 @@ Warnings
 --------
 This utility grants access to all enabled functions in the PHP system to which it is deployed **to anyone who can access it**. For environments exposed to the internet (production and development), this could include anyone who can find or guess the link to this utility on your server. At the core of this utility is the [eval()](http://uk.php.net/eval) function, which allows the the execution of theoretically any PHP code - even code that may access and manipulate files __outside of the document root__, and execution of CLI code using backticks (i.e. `` `ls /` ``).
 
-Because of this, we make the following **strong** recommendations:-
+Because of this, we **strongly** recommend the following:-
  * __NEVER__ deploy this utility to production environments, even during development testing
  * __Do not__ deploy this utility to development environments accessible from the internet
  * It should be safe to deploy this utility to a locally-hosted web server (i.e. XAMPP), but only where you are certain the web server is not exposed to the internet
