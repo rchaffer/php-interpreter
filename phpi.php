@@ -1,11 +1,12 @@
 <?php
-	// php interpreter
+	// PHP Interpreter
 	
-	// created by richard chaffer, 2012-2014
-	// released under the mit licence (mit). see the full text at the end of this file
+	// Created by Richard Chaffer, 2012-2014
+	// Released under the MIT licence (MIT). See the full text at the end of this file
+	// For more information see https://github.com/rchaffer/php-interpreter
 	
-  // WARNING // // // // // // // // // // // // // // // // // // // // // // // // // //
-  //
+  	// WARNING // // // // // // // // // // // // // // // // // // // // // // // // //
+  	//  
 	//  DO _NOT_ UPLOAD THIS TO _ANY_ PRODUCTION SYSTEM
 	//  IT IS _NOT_ RECOMMENDED TO UPLOAD THIS TO EXTERNALLY-ACCESSIBLE SERVERS
 	//  IT IS RECOMMENDED THAT THIS UTILITY BE USED _ONLY_ ON LOCALLY-HOSTED PLATFORMS
@@ -13,34 +14,33 @@
 	//  This utility uses the PHP eval() function to process commands in an unmoderated
 	//  manner. This could be used to modify environmental settings on your PHP platform,
 	//  and could easily be used by malicious individuals to access and manipulate files
-	//  stored on it EVEN OUTSIDE THE DOCUMENT ROOT.
+	//  stored on it EVEN OUTSIDE THE DOCUMENT ROOT, in addition to the execution of 
+	//  malicious OS command-line operations.
 	//
 	//  The author accepts no liability for failure to heed the above warnings.
-	//
-	// WARNING // // // // // // // // // // // // // // // // // // // // // // // // // //
+	//  
+	// WARNING // // // // // // // // // // // // // // // // // // // // // // //
 	
-	// this iteration: 1.1.2
+	// This iteration: 1.1.2
 	
 	// changelog:-
 	//   ...
-	//   i1.0.0		01-12-12	first fully working state ("One-shot PHP Interpreter")
-	//   i1.0.1		19-12-12	implemented fatal error catcher (onShutdown)
-	//   i1.0.2		04-04-13  added $().ospiTraceback()
-	//   i1.0.3		06-04-13  changed name to "PHP Interpreter"
-	//   i1.0.4		03-06-13	changed session name to prevent interference with shared hosts
-	//   i1.1.0   29-05-14  recoded to non-jquery javascript, reduced to single-file, renamed files to phpi
-	//   i1.1.1   28-10-14  added base64 embedded pngs to #x
-	//   i1.1.2   02-11-14  changed licence from cc-by-sa4.0 to mit, verified working in modern browsers
+	//   i1.0.0	01-12-12	first fully working state ("One-shot PHP Interpreter")
+	//   i1.0.1	19-12-12	implemented fatal error catcher (onShutdown)
+	//   i1.0.2	04-04-13	added $().ospiTraceback()
+	//   i1.0.3	06-04-13	changed name to "PHP Interpreter"
+	//   i1.0.4	03-06-13	changed session name to prevent interference with shared hosts
+	//   i1.1.0	29-05-14	recoded to non-jquery javascript, reduced to single-file, renamed files to phpi
+	//   i1.1.1	28-10-14	added base64 embedded pngs to #x
+	//   i1.1.2	02-11-14	changed licence from cc-by-sa4.0 to mit, verified working in modern browsers
 	//   -- DEPLOYED TO GITHUB, as i1.1.2, 02-11-14 --
 	
-	// pending enhancements:-
-	//   1  test in non-chrome browsers
-	//   2  implement extended history (ctrl-up, ctrl-down)
-	//   3  deploy to github
-	
-	// function definitions
+	// Pending enhancements:-
+	//   1  Test in browsers earlier than current (at 02-11-14)
+	//   2  Implement extended history (ctrl-up, ctrl-down)
 	
 	if(!empty($_REQUEST)){
+		// this is an ajax request, containing code to execute
 		session_name('PHPI');
 		session_start();
 		
@@ -98,6 +98,7 @@
 		}
 		echo(json_encode($output));
 	} else {
+		// there is no code to execute, so return the full clientside page for display
 		echo <<<EOS
 <!DOCTYPE html>
 <html>
@@ -154,9 +155,9 @@
 				16384:'E_USER_DEPRECATED',
 				32767:'E_ALL',
 			};
-			var multilinetab = '    ';							          // the tab character
-			var multilinetabce = '&nbsp;&nbsp;&nbsp;&nbsp;';	// the html character entity tab character
-			var defaultlineheight = 1.2;                      // the default line height (will vary across browsers)
+			var multilinetab = '    ';					// the tab character
+			var multilinetabce = '&nbsp;&nbsp;&nbsp;&nbsp;';		// the html character entity tab character
+			var defaultlineheight = 1.2;                      		// the default line height (will vary across browsers)
 			var x_arrowup = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gocDAMR/BitLAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAABHUlEQVQ4y53TvyuFcRTH8ZdfdQ3Ij0sySFIGWWQQWUyULDLZbBZl8jObP+DaZDcphdG/YGO7mySD6BbXfe71GJDn0ePpuqdO5/T9nDrv7/l+DymWJ5OnLq2mPk0ssVliVi12SesN4TUPBzT8m6CDjTIqZCdY+Ksu8X6ntPXzFDl6viC7Q1AVQTdbZUS8bZqlqgiOaB/h8VsIf2LhmK4cpVSCAXbKPlmDCMU7LXMspxIckB3lISqE8fz1hI4cxUSCwa/uUYJKfBbNM6wkEuzTM879X8/1TRJSPKczx0uMYJjdX5OPeeUnZiZZjRFs0zvBXbW/NCQ4o/OQQj2MsJfWPYGmaYo1qFunb5Lb/+5KSHBOd+MQi29c1bJwY8x/AOXyYbfGX3b4AAAAAElFTkSuQmCC" alt="arrow-up.png" width="10" height="10">';
 			var x_arrowdn = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gocDAQFqYPvlgAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAABQUlEQVQ4y53TsUpcURAG4G9dohALwSZgZ+87WIZUok8gSRGsooJV+oBBDIqQJqxm0UpEi+CSvIOFj2CzuwkkbBLNYu7eey2yB4/XvQtxYJiZMzP/zDBnKp9YmGbZA6jNbuUlE6t8w2hwVJBHeqC84KszVT3jep4/4zzN+86sL4OeRW9B/mBzkaMR+MiHHn97KOO0YJ+yAVU453qOX495lkfV80InQe/w7gVHMBLm26fWozusi8AN3oa8GOCyyVpWmDvtc7A7bK3TvgcAu+wldBMk0expZDdYj3PuAJxw1WIlrhxzh61NWqUAUKOecDloC595U4y/B9Cg22I1KyT/ZHv734cbDgAH7Cf8TqP9fxlQvRSg38Wr9Lb6znu+/tehzDJ2zPcT8iWelMVVyxwXpLO0M5qvOXzItZrh0XMmh8XcAH/pl7mZtX2GAAAAAElFTkSuQmCC" alt="arrow-dn.png" width="10" height="10">';
 			var computedlineheight;
@@ -185,12 +186,12 @@
 							data:'fn=getLast',
 							dataType:'json',
 							success:function(result){
-                if(c.tagName.toLowerCase() == 'input'){
-                  // replace newlines with spaces
-                  var last = result.last.replace(/\\n/g, ' ');
-                } else {
-                  var last = result.last;
-                }
+								if(c.tagName.toLowerCase() == 'input'){
+									// replace newlines with spaces
+									var last = result.last.replace(/\\n/g, ' ');
+								} else {
+									var last = result.last;
+								}
 								c.value = last;
 							},
 							fail:function(jqXHR, textStatus){
@@ -250,12 +251,12 @@
 						new_c.removeAttribute('type');
 						new_c.setAttribute('placeholder', textareaplaceholder);
 						c.parentNode.insertBefore(new_c, c);
-						c.parentNode.removeChild(c);                // remove the original c
+						c.parentNode.removeChild(c)			// remove the original c
 						x.innerHTML = x_arrowup;
-						resizeTextarea();                           // to ensure the correct size
+						resizeTextarea()				// to ensure the correct size
 					} else {
 						// remove the textarea and insert the input
-						value.replace(/\\n/g, ' ');					        // collapse to one line
+						value.replace(/\\n/g, ' ');			// collapse to one line
 						var new_c = document.createElement('input');
 						attrs.forEach(function(item){
 							var new_attr = document.createAttribute(item.name);
@@ -268,11 +269,11 @@
 						new_c.setAttribute('placeholder', inputplaceholder);
 						new_c.style.height = String(defaultlineheight)+'em';
 						c.parentNode.insertBefore(new_c, c);
-						c.parentNode.removeChild(c);                // remove the original c
+						c.parentNode.removeChild(c);			// remove the original c
 						x.innerHTML = x_arrowdn;
-						resizeInput();                              // to ensure the correct size
+						resizeInput();					// to ensure the correct size
 					}
-					c = document.getElementById('c');			        // retarget #c for continuation
+					c = document.getElementById('c');			// retarget #c for continuation
 					c.value = value;
 					
 					// respawn the listeners for #c
@@ -347,8 +348,6 @@
 				// resizes textarea vertically
 				var lines = (( c.value.match(/\\n/g) || [] ).length + 2) * defaultlineheight;	// 2 because we want to always have one blank trailing line
 				c.style.height = String(lines)+'em';
-//				var lines = (( c.value.match(/\\n/g) || [] ).length + 2) * computedlineheight;	// 2 because we want to always have one blank trailing line
-//				c.style.height = String(lines)+'px';
 			}
 			
 			function submitCommand(){
@@ -367,7 +366,6 @@
 							i = i.split('<br />');
 							for(line in i){
 								if(line != 0){
-//  						&& line != (i.length-1)){
 									i[line] = multilinetabce + i[line];
 								}
 							}
@@ -387,7 +385,7 @@
 						if(result.error.error != null){
 							// echo error too
 							console.warn('PHP provided the following error details:-');
-              console.warn(result.error);
+							console.warn(result.error);
 							var li = document.createElement('li');
 							li.innerHTML = '<strong>'+errortypes[result.error.error.type]+'</strong> error with message <strong>'+result.error.error.message+'</strong> was returned by PHP at line <strong>'+result.error.error.line+'</strong> in file <strong>'+result.error.error.file+'</strong>'
 							var attr = document.createAttribute('class');
@@ -462,7 +460,7 @@
 						);
 						if(documentheight > window.innerHeight){
 							html.scrollTop = documentheight;    // for ie
-              body.scrollTop = documentheight;    // for other browsers
+							body.scrollTop = documentheight;    // for other browsers
 						}
 					},
 					fail:function(xhr, ts){
@@ -548,7 +546,7 @@
 								r.appendChild(li);
 							}
 						
-              resizeInput();
+							resizeInput();
 							var body = document.body;
 							var html = document.documentElement;
 							var documentheight = Math.max(
@@ -559,8 +557,8 @@
 								html.offsetHeight
 							);
 							if(documentheight > window.innerHeight){
-                html.scrollTop = documentheight;    // for ie
-                body.scrollTop = documentheight;    // for other browsers
+								html.scrollTop = documentheight;    // for ie
+								body.scrollTop = documentheight;    // for other browsers
 							}
 						} else {
 							var li = document.createElement('li');
@@ -573,7 +571,7 @@
 							li.innerText = 'Error - the Ajax call failed with status: '+ts+'. It\'s unlikely this was caused by your PHP statement.';
 							r.appendChild(li);
 							
-              resizeInput();
+							resizeInput();
 							var body = document.body;
 							var html = document.documentElement;
 							var documentheight = Math.max(
@@ -584,8 +582,8 @@
 								html.offsetHeight
 							);
 							if(documentheight > window.innerHeight){
-                html.scrollTop = documentheight;    // for ie
-                body.scrollTop = documentheight;    // for other browsers
+								html.scrollTop = documentheight;    // for ie
+								body.scrollTop = documentheight;    // for other browsers
 							}
 						}
 					},
@@ -671,8 +669,8 @@
 								li.innerText = 'The server returned error 500 - this usually indicates a fatal error in PHP. Check your code for syntax errors and retry.';
 								r.appendChild(li);
 							}
-						
-              resizeInput();
+							
+							resizeInput();
 							var body = document.body;
 							var html = document.documentElement;
 							var documentheight = Math.max(
@@ -683,8 +681,8 @@
 								html.offsetHeight
 							);
 							if(documentheight > window.innerHeight){
-                html.scrollTop = documentheight;    // for ie
-                body.scrollTop = documentheight;    // for other browsers
+								html.scrollTop = documentheight;    // for ie
+								body.scrollTop = documentheight;    // for other browsers
 							}
 						}
 					}
