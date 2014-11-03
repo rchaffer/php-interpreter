@@ -20,9 +20,9 @@ Simply place phpi.php in the location where you would like to access it (obvious
 
 On load, the utility will be in single-line mode - to change between it and multi-line mode, click the red arrow to the right of the command-line.
 
-In single-line mode, the Enter key will execute the entered code, and pressing the Up key will fill the command-line with the last command executed.
+In single-line mode, the *Enter* key will execute the entered code, and pressing the *Up* key will fill the command-line with the last command executed.
 
-In multi-line mode, the Enter key will insert a new line, the Tab key will indent the current line (insert 4 spaces). In multi-line mode Ctrl+Enter will execute the entered code, and pressing Ctrl+Up will fill the command-line with the last command executed.
+In multi-line mode, the *Enter* key will insert a new line, the *Tab* key will indent the current line (insert 4 spaces). In multi-line mode *Ctrl+Enter* will execute the entered code, and pressing *Ctrl+Up* will fill the command-line with the last command executed.
 
 When an error is encountered, it will report the error in the output feed, and will leave the entered code in the command-line, awaiting corrections. For further information, the full error details (including trace) are reported to the console.
 
