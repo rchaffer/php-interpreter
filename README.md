@@ -5,7 +5,7 @@ A PHP Interpreter, useful for evaluating simple PHP commands.
 
 Warnings
 --------
-This utility grants access to all enabled functions in the PHP system to which it is deployed **to anyone who can access it**. For environments exposed to the internet (production and development), this could include anyone who can find or guess the link to this utility on your server. At the core of this utility is the [eval()](http://uk.php.net/eval) function, which allows the the execution of theoretically any PHP code - even code that may access and manipulate files __outside of the document root__.
+This utility grants access to all enabled functions in the PHP system to which it is deployed **to anyone who can access it**. For environments exposed to the internet (production and development), this could include anyone who can find or guess the link to this utility on your server. At the core of this utility is the [eval()](http://uk.php.net/eval) function, which allows the the execution of theoretically any PHP code - even code that may access and manipulate files __outside of the document root__, and execution of CLI code using backticks (i.e. `` `ls /` ``).
 
 Because of this, we make the following **strong** recommendations:-
  * __NEVER__ deploy this utility to production environments, even during development testing
