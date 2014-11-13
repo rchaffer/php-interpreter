@@ -41,34 +41,59 @@
 	
 	if(!empty($_REQUEST)){
 		// this is an ajax request, containing code to execute
+		
+		// establish a phpi-specific session
 		session_name('PHPI');
 		session_start();
 		
-		if(function_exists('xdebug_disable')) xdebug_disable();	// xdebug messes up error reporting
+		// xdebug messes up error reporting, so turn it off
+		if(function_exists('xdebug_disable')) xdebug_disable();
 		
-		function getLast($args){
-			// nothing expected in $args[] at present
+		function getLast($args = array()){
 			// returns last command
+			// no required args at present
 			return array('last'=>$_SESSION['last']);
 		}
 
-		function executePHP($args){
+		function executePHP($args = array()){
 			// executes php code and returns a json list of the items that need to be added to the interpreter buffer (history)
-			ob_start();								// start logging output
-			ini_set('display_errors', '0');			// suppress error reporting
+			
+			// start logging output, which will be obtained after execution and echoed as [output]
+			ob_start();
+			
+			// suppress error reporting
+			ini_set('display_errors', '0');
+			
+			// initialise return array (will contain input, output and potentially error)
 			$return = array();
+			
+			// add this code to the history
 			$_SESSION['last'] = $args['eval'];
+			
+			// process the code
 			eval($args['eval']);
+			
+			// if errors occured, get them and the trace
 			$error = error_get_last();
 			if(!is_null($error)){
 				$trace = debug_backtrace();
 			} else {
 				$trace = null;
 			}
+			
+			// use php's code highlighting to highlight the executed code (may assist in debugging)
+			// we will prefix #c's prompt marker
+			// NOTE: using &nbsp for the meantime - to change to margin/list-image
 			$highlight = highlight_string('<?php '.$args['eval'].' ?>', true);
-			$return['input'] = '<span class="r_pmt">&gt;&gt;&gt;</span>'.$highlight;	// using &nbsp for the meantime - to change to margin/list-image
+			$return['input'] = '<span class="r_pmt">&gt;&gt;&gt;</span>'.$highlight;
+			
+			// get everything that was written to the output buffer during execution
 			$ob = ob_get_clean();
+			
+			// restore error state (shouldn't have any effect, but do it for completeness)
 			ini_restore('display_errors');
+			
+			// assemble the return array
 			$return['output'] = htmlspecialchars($ob);		// output uses margin now
 			$return['error'] = array('error'=>$error, 'trace'=>$trace);
 			return $return;
@@ -76,7 +101,10 @@
 		
 		// fatal error handler
 		function catchFatalErrors(){
+			// get the contents of the output buffer (should contain any errors, warnings, notices etc.)
 			$ob = ob_get_clean();
+			
+			// restore error state (shouldn't have any effect, but do it for completeness)
 			ini_restore('display_errors');
 			echo($ob);
 	/*		$error = error_get_last();
@@ -89,6 +117,8 @@
 				echo(json_encode($return));
 			}
 	*/	}
+	
+		// on fatal errors, we want to use catchFatalErrors to dump the error
 		register_shutdown_function('catchFatalErrors');
 		
 		// core activity handler
@@ -96,9 +126,12 @@
 			$P = $_POST;
 			$output = $P['fn']($P);
 		}
+		
+		// dump the output array, which javascript will parse and handle appropriately
 		echo(json_encode($output));
 	} else {
 		// there is no code to execute, so return the full clientside page for display
+		// this is the initial entrypoint
 		echo <<<EOS
 <!DOCTYPE html>
 <html>
